@@ -1,0 +1,2208 @@
+openapi: 3.0.0
+info:
+  title: Integrass Sports API
+  description: The Open API for Integrass Sports for the Users, and they can manage
+    related to their Memberships, Events and Courses.
+  contact:
+    name: Integrass
+    email: support@integrass.com
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/integrass/Integrasssports/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: https://api.local.integrass.com
+  description: Integrass Sports API Server URL
+- url: /services
+  description: prefix for all endpoints
+- url: /mock
+  description: Mock Servicesprefix for all endpoints
+tags:
+- name: ClientAuth
+  description: Client/3rd party Authentication
+- name: UserAuth
+  description: User authentications
+- name: Registration
+  description: Member registration Forms
+- name: Profile
+  description: A user's way to aquire a Membership (individual or family).
+- name: Organization
+  description: Information about Organization
+- name: OrganizationCompany
+  description: Company information within the Organization
+paths:
+  /api/token:
+    post:
+      tags:
+      - ClientAuth
+      summary: Client Authentication
+      operationId: ClientAuth
+      requestBody:
+        $ref: '#/components/requestBodies/PasswordAuth'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenAuthResponse'
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientTokenError'
+  /api/refresh_token:
+    post:
+      tags:
+      - ClientAuth
+      summary: Refresh Tokens
+      operationId: RefreshToken
+      requestBody:
+        $ref: '#/components/requestBodies/RefreshToken'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenAuthResponse'
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientReTokenError'
+  /api/login:
+    post:
+      tags:
+      - UserAuth
+      summary: user login
+      operationId: userLogin
+      requestBody:
+        $ref: '#/components/requestBodies/UserLoginRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginBearerTokenResponse'
+        "401":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginBearerTokenError'
+  /api/logout:
+    get:
+      tags:
+      - UserAuth
+      summary: user logout
+      operationId: user logout
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
+        "401":
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutError'
+      security:
+      - bearerAuth:
+        - Bearer token
+  /api/forgot_password:
+    post:
+      tags:
+      - UserAuth
+      summary: Forgot Password Form
+      description: token with link sent to your email copy the token for reset password
+      operationId: UserForgotPassword
+      requestBody:
+        $ref: '#/components/requestBodies/ForgotPassRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForgotPassResponse'
+        "401":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForgotPassError'
+  /api/password_reset:
+    post:
+      tags:
+      - UserAuth
+      summary: Password reset with token
+      description: Get the token from the email
+      operationId: UserPasswordReset
+      requestBody:
+        $ref: '#/components/requestBodies/PassResetRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PassResetResponse'
+        "401":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PassResetError'
+  /api/my_profile:
+    post:
+      tags:
+      - Profile
+      summary: Get current user profile informations
+      operationId: getUserProfile
+      parameters: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        "401":
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutError'
+      security:
+      - bearerAuth:
+        - Bearer token
+  /api/profile/{profileId}:
+    get:
+      tags:
+      - Profile
+      summary: Get the given User Profile Information
+      operationId: GetProfile
+      parameters:
+      - name: profileId
+        in: path
+        description: Users Profile Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileInfo'
+        "404":
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: true
+      security:
+      - OAuth2:
+        - read
+        - update
+    put:
+      tags:
+      - Profile
+      summary: Update User Profile Information
+      operationId: upateProfile
+      parameters:
+      - name: profileId
+        in: path
+        description: Users Profile Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateProfileInfo'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileInfo'
+        "404":
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      deprecated: true
+      security:
+      - OAuth2:
+        - read
+        - update
+    delete:
+      tags:
+      - Profile
+      summary: Delete a profile by ID
+      operationId: deleteProfile
+      parameters:
+      - name: profileId
+        in: path
+        description: Users Profile Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: UserProfile cannot be deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+        "404":
+          description: Resource not found
+      deprecated: true
+      security:
+      - OAuth2:
+        - read
+        - update
+  /api/organization:
+    get:
+      tags:
+      - Organization
+      summary: Get Organization list informations
+      operationId: getOrganizationList
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationListResponse'
+        "401":
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutError'
+      security:
+      - bearerAuth:
+        - Bearer token
+    post:
+      tags:
+      - Organization
+      summary: Create new Organization informations
+      operationId: createOrganization
+      requestBody:
+        $ref: '#/components/requestBodies/OrganizationRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInfoResponse'
+        "401":
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutError'
+        "404":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationPostError'
+      security:
+      - bearerAuth:
+        - Bearer token
+  /api/organization/{organizationId}:
+    get:
+      tags:
+      - Organization
+      summary: Get Organization list informations
+      operationId: getOrganizationInfo
+      parameters:
+      - name: organizationId
+        in: path
+        description: Organization Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInfoResponse'
+        "401":
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutError'
+        "404":
+          description: Organization not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInfoError'
+      security:
+      - bearerAuth:
+        - Bearer token
+    put:
+      tags:
+      - Organization
+      summary: Update Organization informations
+      operationId: updateOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: Organization Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/OrganizationRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInfoResponse'
+        "401":
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutError'
+        "404":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationPostError'
+      security:
+      - bearerAuth:
+        - Bearer token
+    delete:
+      tags:
+      - Organization
+      summary: Delete a Organization by ID
+      operationId: deleteOrganization
+      parameters:
+      - name: organizationId
+        in: path
+        description: Organization Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Organization deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationDeleteResponse'
+        "401":
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutError'
+        "404":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInfoError'
+      security:
+      - bearerAuth:
+        - Bearer token
+  /api/member_registration:
+    post:
+      tags:
+      - Registration
+      summary: 'Registration form - Step 1 : Personal Information & Donation'
+      operationId: createRegistration
+      requestBody:
+        $ref: '#/components/requestBodies/RegistrationRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyRegInfoResponse'
+        "422":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationMemberErrorResponse'
+  /api/club_registration:
+    post:
+      tags:
+      - Registration
+      summary: 'Registration form - Step 1 : Personal Information & Donation'
+      operationId: createClubRegistration
+      requestBody:
+        $ref: '#/components/requestBodies/RegistrationRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyRegInfoResponse'
+        "422":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationMemberErrorResponse'
+      deprecated: true
+  /api/my_company:
+    get:
+      tags:
+      - OrganizationCompany
+      summary: Get logged in users company info with Organization
+      operationId: getLoginUsersComapnyInfo
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUsersComapnyInfoResponse'
+        "401":
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutError'
+        "404":
+          description: Organization not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUsersComapnyInfoError'
+      deprecated: true
+      security:
+      - bearerAuth:
+        - Bearer token
+  /api/org_company/{organizationId}:
+    get:
+      tags:
+      - OrganizationCompany
+      summary: Get list of all companies in the Organization
+      operationId: getOrganizationComapnyList
+      parameters:
+      - name: organizationId
+        in: path
+        description: Organization Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationComapnyListResponse'
+        "401":
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutError'
+        "404":
+          description: Organization not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationComapnyListError'
+      security:
+      - bearerAuth:
+        - Bearer token
+  /api/company/{organizationId}/{companyId}:
+    get:
+      tags:
+      - OrganizationCompany
+      summary: Get specific company information
+      operationId: getOrganizationComapnyinfo
+      parameters:
+      - name: organizationId
+        in: path
+        description: Organization Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: companyId
+        in: path
+        description: Company Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationComapnyinfoResponse'
+        "401":
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutError'
+        "404":
+          description: Company not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationComapnyinfoError'
+      security:
+      - bearerAuth:
+        - Bearer token
+  /api/company/{OrganizationId}:
+    post:
+      tags:
+      - OrganizationCompany
+      summary: Create new company information
+      operationId: createOrganizationComapny
+      parameters:
+      - name: OrganizationId
+        in: path
+        description: Organization Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/CompanyRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationComapnyinfoResponse'
+        "401":
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutError'
+        "404":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyPostError'
+      security:
+      - bearerAuth:
+        - Bearer token
+  /api/company/{companyId}:
+    put:
+      tags:
+      - OrganizationCompany
+      summary: Update company information
+      operationId: updateOrganizationComapny
+      parameters:
+      - name: companyId
+        in: path
+        description: Company Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/CompanyRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationComapnyinfoResponse'
+        "401":
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutError'
+        "404":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyPostError'
+      security:
+      - bearerAuth:
+        - Bearer token
+    delete:
+      tags:
+      - OrganizationCompany
+      summary: Delete company information
+      operationId: deleteOrganizationComapny
+      parameters:
+      - name: companyId
+        in: path
+        description: Company Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Company deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyDeleteResponse'
+        "401":
+          description: Invalid authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutError'
+        "404":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationComapnyinfoError'
+      security:
+      - bearerAuth:
+        - Bearer token
+  /api/verify/{regId}:
+    get:
+      tags:
+      - Registration
+      summary: 'Registration form - Step 2 : Verify Information'
+      operationId: VerifyRegInfo
+      parameters:
+      - name: regId
+        in: path
+        description: Registration Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyRegInfoResponse'
+        "422":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationMemberErrorResponse'
+    put:
+      tags:
+      - Registration
+      summary: 'Registration form - Step 2 : update Verify Information'
+      operationId: updateVerifyRegInfo
+      parameters:
+      - name: regId
+        in: path
+        description: Registration Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/RegistrationUpdateRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyRegInfoResponse'
+        "422":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationMemberErrorResponse'
+  /api/waivers/{regId}:
+    get:
+      tags:
+      - Registration
+      summary: 'Registration form - Step 3 : Get Waivers Content'
+      operationId: GetWaiversInfo
+      parameters:
+      - name: regId
+        in: path
+        description: Registration Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWaiversInfoResponse'
+        "404":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWaiversInfoError'
+      deprecated: true
+    post:
+      tags:
+      - Registration
+      summary: 'Registration form - Step 3 : Apply Waivers Information in registration'
+      operationId: AcceptWaivers
+      parameters:
+      - name: regId
+        in: path
+        description: Registration Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/WaiversRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WaiversResponse'
+        "422":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WaiversError'
+      deprecated: true
+  /api/coupon/{code}:
+    get:
+      tags:
+      - Registration
+      summary: 'Registration form - Step 4 : Get Coupon code'
+      operationId: GetCouponCodeInfo
+      parameters:
+      - name: code
+        in: path
+        description: Coupon code
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCouponInfoResponse'
+        "404":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCouponInfoError'
+      deprecated: true
+  /api/member/remove/{memberId}:
+    delete:
+      tags:
+      - Registration
+      summary: 'Registration form - Step 4 : remove members from registration on checkout
+        page'
+      operationId: RemoveMemberFromRegistration
+      parameters:
+      - name: memberId
+        in: path
+        description: member id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delMemberFromRegResponse'
+        "422":
+          description: member not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delMemberFromRegError'
+      deprecated: true
+  /api/paynow/{regId}:
+    post:
+      tags:
+      - Registration
+      summary: 'Registration form - Step 4 : Checkout'
+      operationId: ReggistrationCheckout
+      parameters:
+      - name: regId
+        in: path
+        description: Registration Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/CheckoutRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutResponse'
+        "422":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutError'
+components:
+  schemas:
+    TokenAuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYjQ1MWQ1ZjM5YjhlYTVjMjNhOWMzMDNhZmY3ZThjMGZiNTg1ODM0ZmQ4N2IzYjk5MjAwYTIzZDM0Mjc0NzNhM2E2OTM3MGQ2ZjcwMTQ2YTMiLCJpYXQiOjE2MDczNjEyODgsIm5iZiI6MTYwNzM2MTI4OCwiZXhwIjoxNjM4ODk3Mjg4LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0
+    Profile:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: User Information
+        data:
+          type: object
+          example:
+            id: 1
+            first_name: Torey
+            last_name: Armstrong
+            email: faker91924@email.com
+            created_at: 2020-12-10T09:48:24.000000Z
+            updated_at: 2020-12-16T15:03:44.000000Z
+            organization_id: 1
+            organization:
+              id: 1
+              name: integrass
+              display_name: Integrass
+              address1: 956 International Pkwy
+              adress2: Lake Mary
+              zip: "32746"
+              state_code: FL
+              city: FL
+              country: USA
+              active: 1
+              created_at: 2020-12-10T09:48:24.000000Z
+              updated_at: 2020-12-10T09:48:24.000000Z
+            roles:
+              "0":
+                id: 1
+                name: Admin
+                type: true
+                slug: admin
+                permissions: admin
+                pivot:
+                  user_id: 1
+                  role_id: 1
+                  id: 1
+    ProfileInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 100
+        accountId:
+          type: integer
+          nullable: true
+          example: 2345
+        email:
+          type: string
+          example: cameron@integrass.com
+        username:
+          type: string
+          example: Hadley8712
+        firstName:
+          type: string
+          example: Hadley
+        lastName:
+          type: string
+          example: Ritchie
+        dob:
+          type: string
+          format: m/d/Y
+          example: 01/28/1988
+        gender:
+          type: string
+          nullable: true
+          example: M
+        compId:
+          type: integer
+          nullable: true
+          example: 770892
+        membership:
+          type: array
+          items:
+            type: object
+            nullable: true
+            example:
+              membershipType: Official
+              enrolledOn: 05/15/2020
+              expireIn: 05/14/2021
+              payment: Paypal
+              txnId: PEI34JDX578
+        events:
+          type: array
+          items:
+            type: object
+            nullable: true
+            example:
+            - eventId: 123
+              eventName: AOS
+              enrolledOn: 08/23/2020
+              payment: Paypal
+              txnId: ASD456KI98
+            - eventId: 456
+              eventName: ACAH
+              enrolledOn: 06/28/2020
+              payment: Coupons
+              couponCode: KDIHGHSWJG
+    Error:
+      type: object
+      example:
+        message: The given data was invalid
+        errors:
+        - firstName:
+          - The first name is required
+          - A name should not contain numbers
+    ClientTokenError:
+      type: object
+      example:
+        message: The given data was invalid
+        errors:
+          clientSecretKey: Youe Secret Key is mismatched
+          username: incorrect username/email
+          password: incorrect password
+    ClientReTokenError:
+      type: object
+      example:
+        clientSecretKey: Youe Secret Key is mismatched
+    LoginBearerTokenResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Successfully loged in
+        data:
+          type: object
+          example:
+            token: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMjlhNmMxMGYxMDAzZjg2NDJmZGI5OTMwYWE0ZjUxMDIxNDUyMzVmYTc4ZTU2NjNiOWFiZGRkMDhiMDE3YmQ1NTQ5OTVlMzlmN2M5OTQwYWMiLCJpYXQiOjE2MDgxMTU0NjgsIm5iZiI6MTYwODExNTQ2OCwiZXhwIjoxNjM5NjUxNDY4LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0
+    LoginBearerTokenError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Unauthorised
+        errors:
+          type: string
+          example: invalid user
+    LogoutResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Successfully loged out
+        data:
+          type: object
+    LogoutError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Unauthenticated
+    ForgotPassResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Reset link sent to your email.
+        data:
+          type: object
+          example:
+            email: user@email.com
+    ForgotPassError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Unable to send reset link
+        errors:
+          type: string
+          example: invalid user or already send reset link to your email
+    PassResetResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Password reset successfully.
+        data:
+          type: object
+          example: 201
+    PassResetError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Unable to reset password
+        errors:
+          type: string
+          example: Token Expired
+    OrganizationListResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Organization Information
+        data:
+          type: object
+          example:
+            "0":
+              id: 1
+              name: integrass
+              display_name: Integrass
+              address1: 956 International Pkwy
+              adress2: Lake Mary
+              zip: "32746"
+              state_code: FL
+              city: FL
+              country: USA
+              active: 1
+              contact:
+                "0":
+                  id: 2
+                  firstname: Emmanuelle
+                  lastname: Rice
+                  email: faker35116@email.com
+                  alternate_email: faker81471@email.com
+                  phone: 281-896-7301
+                  mobile: 004-744-2109
+                  type: true
+                  active: true
+                  organization_id: 1
+            "1":
+              id: 2
+              name: integrass-Sports
+              display_name: Integrass-Sports
+              address1: 956 International Pkwy
+              adress2: Lake Mary
+              zip: "32746"
+              state_code: FL
+              city: FL
+              country: USA
+              active: 1
+              contact:
+                "0":
+                  id: 3
+                  firstname: Hazle
+                  lastname: Maggio
+                  email: faker351564@email.com
+                  alternate_email: faker95431@email.com
+                  phone: 281-896-7301
+                  mobile: 004-744-2109
+                  type: true
+                  active: true
+                  organization_id: 2
+    OrganizationInfoResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Organization Information
+        data:
+          type: object
+          example:
+            id: 1
+            name: integrass
+            display_name: Integrass
+            address1: 956 International Pkwy
+            adress2: Lake Mary
+            zip: "32746"
+            state_code: FL
+            city: FL
+            country: USA
+            active: 1
+            contact:
+              "0":
+                id: 2
+                firstname: Emmanuelle
+                lastname: Rice
+                email: faker35116@email.com
+                alternate_email: faker81471@email.com
+                phone: 281-896-7301
+                mobile: 004-744-2109
+                type: true
+                active: true
+                organization_id: 1
+    OrganizationInfoError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Organization not exist
+        errors:
+          type: object
+          example: []
+    OrganizationPostError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: The given data was invalid.
+        errors:
+          type: object
+          example:
+            name:
+            - Organization name is required
+            - Organization name is already exist
+            displayName:
+            - Organization slug is required
+            address1:
+            - address1 field is required
+            adress2:
+            - The adress2 field is required
+            zip:
+            - zip code field is required
+            state_code:
+            - State field is required
+            city:
+            - City field is required
+            country:
+            - Country is required
+            firstname:
+            - first name  is required
+            lastname:
+            - last name is required
+            email:
+            - email is required
+            phone:
+            - phone is required
+            mobile:
+            - mobile is required
+    OrganizationDeleteResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Organization Deleted Successfully
+        data:
+          type: object
+          example:
+          - id: 3
+            name: Integrass
+            display_name: integrass
+            address1: 56 odStr 123
+            adress2: Local
+            zip: "32701"
+            state_code: FL
+            city: Altimonte spring
+            country: USA
+            contact: []
+    RegistrationMemberInfoResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Step 1 completed!
+        data:
+          type: object
+          example:
+            id: 101
+            membership_type: "1"
+            address_1: |-
+              Ste. 1590
+              956 International
+              Parkway
+            address_2: ""
+            zip: 32746
+            state_code: FL
+            city: Lake Mary
+            country: USA
+            email: mohamedali@integrass.com
+            phone_1: "885258247"
+            phone_2: "885258247"
+            members:
+              first_name: Shahul
+              middle_name: Mohamedali
+              last_name: Jinna
+              gender: m
+              dob: 05/02/1989
+              relationship: ""
+              citizenship: ""
+    RegistrationMemberErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: Failed
+        errors:
+          type: object
+          example:
+            first_name:
+            - First name is required
+            last_name:
+            - Last name is required
+            email:
+            - Email is required
+            gender:
+            - Gender is required
+            dob:
+            - Date of birth is required
+            mailing_address:
+            - Mailing address is required
+            country:
+            - Country is required
+            state:
+            - State is required
+            city:
+            - City is required
+            phone_1:
+            - Phone is required
+            membership_concession:
+            - Membership concession is required
+            sports_discipline:
+            - Sports discipline is required
+            federation:
+            - Federation is required
+    LoginUsersComapnyInfoResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Company Information
+        data:
+          type: object
+          example:
+            id: 1
+            name: Integrass-Sports
+            address_one: 216 White Drive
+            address_two: 5th Block
+            city: COLORADO SPRINGS
+            state: COLORADO
+            status: 1
+            zip: 80906
+            country: USA
+            organization_id: 1
+            organization:
+              id: 1
+              name: integrass
+              display_name: Integrass
+              address1: 956 International Pkwy
+              adress2: Lake Mary
+              zip: "32746"
+              state_code: FL
+              city: FL
+              country: USA
+              active: 1
+    LoginUsersComapnyInfoError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: User not associated with any companies
+        data:
+          type: object
+          example: []
+    OrganizationComapnyListResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Organization with Company Information
+        data:
+          type: object
+          example:
+            id: 1
+            name: integrass
+            display_name: Integrass
+            address1: 956 International Pkwy
+            adress2: Lake Mary
+            zip: "32746"
+            state_code: FL
+            city: FL
+            country: USA
+            active: 1
+            company:
+            - id: 1
+              name: Integrass-Sports
+              address_one: 216 White Drive
+              address_two: 5th Block
+              city: COLORADO SPRINGS
+              state: COLORADO
+              status: 1
+              zip: 80906
+              country: USA
+              organization_id: 1
+            - id: 2
+              name: Integrass-Consulting
+              address_one: 216 White Drive
+              address_two: 5th Block
+              city: COLORADO SPRINGS
+              state: COLORADO
+              status: 1
+              zip: 80906
+              country: USA
+              organization_id: 1
+    OrganizationComapnyListError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Organization has no companies
+        data:
+          type: object
+          example: []
+    OrganizationComapnyinfoResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Company Information
+        data:
+          type: object
+          example:
+            company:
+              id: 1
+              name: Integrass-Sports
+              address_one: 216 White Drive
+              address_two: 5th Block
+              city: COLORADO SPRINGS
+              state: COLORADO
+              status: 1
+              zip: 80906
+              country: USA
+              organization_id: 1
+            Organization:
+              id: 1
+              name: integrass
+              display_name: Integrass
+              address1: 956 International Pkwy
+              adress2: Lake Mary
+              zip: "32746"
+              state_code: FL
+              city: FL
+              country: USA
+              active: 1
+    OrganizationComapnyinfoError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Company not exist
+        data:
+          type: object
+          example: []
+    CompanyPostError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: The given data was invalid.
+        errors:
+          type: object
+          example:
+            organization:
+            - Organization id is required
+            name:
+            - Company name is required
+            - Company name is already exist
+            address_one:
+            - address1 field is required
+            address_two:
+            - The adress2 field is required
+            zip:
+            - zip code field is required
+            state:
+            - State field is required
+            city:
+            - City field is required
+            country:
+            - Country is required
+            firstname:
+            - first name  is required
+            lastname:
+            - last name is required
+            email:
+            - email is required
+            phone:
+            - phone is required
+            mobile:
+            - mobile is required
+    CompanyDeleteResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Company Deleted Successfully
+        data:
+          type: object
+          example:
+          - id: 3
+            name: Integrass-Sports
+            address_one: 56 odStr 123
+            address_two: Local
+            zip: "32701"
+            state: FL
+            city: Altimonte spring
+            country: USA
+            organization: 1
+    WaiversResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Step 2 completed!
+        data:
+          type: object
+          example:
+            registration_id: 3
+            waivers_id: 1
+            initials: RR
+    WaiversError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: The given data was invalid.
+        errors:
+          type: object
+          example:
+            registration_id:
+            - Registration id is required
+            waivers_id:
+            - Accept waiver check box
+            initials:
+            - Initials is required
+    VerifyRegInfoResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: Success
+        message:
+          type: string
+          example: Registration information for verify
+        data:
+          type: object
+          example:
+            id: 4
+            membership_type: individual
+            membership_type_id: 1
+            mailing_address1: 837 Bednar Isle Suite 364
+            mailing_address2: Apt. 890
+            zip: 56219-5578
+            state: Utah
+            city: Lake Rhoda
+            country: Norway
+            phone_1: 1-603-256-4345 x44348
+            email: lina07@yahoo.com
+            members:
+            - id: 5
+              member_id: 4
+              registration_id: 4
+              first_name: Veronica
+              last_name: Emard
+              middle_name: f
+              gender: m
+              dob: 28/03/1975
+              citizenship: NI
+              created_at: 2021-02-03T12:01:37.000000Z
+              updated_at: 2021-02-03T12:01:37.000000Z
+            families:
+            - id: 3
+              member_id: 4
+              registration_id: 4
+              first_name: Frank
+              last_name: Schuppe
+              middle_name: "n"
+              gender: f
+              dob: 21/06/1993
+              citizenship: IS
+              relationship: child
+              created_at: 2021-02-03T12:01:37.000000Z
+              updated_at: 2021-02-03T12:01:37.000000Z
+    GetWaiversInfoResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: Success
+        message:
+          type: string
+          example: Get waiver information
+        data:
+          type: object
+          example:
+            waivers_id: 6
+            waivers_content: Veritatis non sequi a quo. Explicabo debitis rerum repellendus
+              ab vitae error. Reiciendis voluptates quia ea. Non consectetur rerum
+              deleniti itaque nulla et. Ut dolorem dolor perferendis voluptas. Voluptates
+              sint qui eaque odit dolor. Qui dolores maiores explicabo sed. Aliquid
+              animi dolor sed in asperiores qui. Aliquid et ipsa eum velit nihil earum
+              consequatur. Veniam nulla qui aut. Iusto rerum delectus ex harum voluptatem
+              non. Aut quam odit et et eius quia.
+    GetWaiversInfoError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Waivers not exist
+        data:
+          type: object
+          example: []
+    GetCouponInfoResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: Success
+        message:
+          type: string
+          example: Coupon Code Informatio
+        data:
+          type: object
+          example:
+            id: "2"
+            code: STARTPLAY21
+            amount: "10"
+            expire: 02/15/2021
+    GetCouponInfoError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Coupon not exist
+        data:
+          type: object
+          example: []
+    delMemberFromRegResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Member removed from registration
+        data:
+          type: object
+          example: []
+    delMemberFromRegError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Member not exist in this registration
+        data:
+          type: object
+          example: []
+    CheckoutResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: 'This transaction has been approved., Transaction ID: 60161512748'
+        data:
+          type: object
+          example:
+            amount: "100"
+            response_code: "1"
+            transaction_id: "60161512748"
+            auth_id: 1G68MQ
+            message_code: "1"
+            name_on_card: Rajkumar
+            quantity: 1
+    CheckoutError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Card is invalid
+        data:
+          type: object
+          example: []
+    inline_response_403:
+      properties:
+        message:
+          type: string
+  requestBodies:
+    PasswordAuth:
+      content:
+        application/json:
+          schema:
+            properties:
+              grantType:
+                type: string
+                example: password
+              clientId:
+                type: string
+                example: 5DD2573BBC1BE90EA240F
+              clientSecretKey:
+                type: string
+                example: E4FBB8F1AEED3D420CE3F030CAB161
+              scope:
+                type: string
+                example: company
+              username:
+                type: string
+                example: admin@email.com
+              password:
+                type: string
+                example: AdminDev2@!8
+    RefreshToken:
+      content:
+        application/json:
+          schema:
+            properties:
+              grantType:
+                type: string
+                example: refreshToken
+              clientId:
+                type: string
+                example: 5DD2573BBC1BE90EA240F
+              clientSecretKey:
+                type: string
+                example: E4FBB8F1AEED3D420CE3F030CAB161
+              scope:
+                type: string
+                example: company
+    UserLoginRequest:
+      content:
+        application/json:
+          schema:
+            properties:
+              email:
+                type: string
+                example: user@email.com
+              password:
+                type: string
+                example: XhI45Gh!$%
+    ForgotPassRequest:
+      content:
+        application/json:
+          schema:
+            properties:
+              email:
+                type: string
+                example: user@email.com
+    PassResetRequest:
+      content:
+        application/json:
+          schema:
+            properties:
+              email:
+                type: string
+                example: user@email.com
+              token:
+                type: string
+                example: 37b57e9cdd69fff654343b1cf1f3f90e51522a0d5c3cb62d6f274ce526f599df
+              password:
+                type: string
+                example: $bcfT8UV
+              password_confirmation:
+                type: string
+                example: $bcfT8UV
+    StoreProfile:
+      content:
+        application/json:
+          schema:
+            properties:
+              firstName:
+                type: string
+                example: Sigrid
+              lastName:
+                type: string
+                example: Prohaska
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+                example: '******'
+              dob:
+                type: string
+                example: 01/28/1988
+              gender:
+                type: string
+                example: m
+    UpdateProfileInfo:
+      content:
+        application/json:
+          schema:
+            properties:
+              firstName:
+                type: string
+                example: Robert
+              lastName:
+                type: string
+                example: Bashirian
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+                example: '******'
+              dob:
+                type: string
+                example: 01/28/1988
+              gender:
+                type: string
+                example: m
+    OrganizationRequest:
+      content:
+        application/json:
+          schema:
+            properties:
+              name:
+                type: string
+                example: Integrass-Sports
+              displayName:
+                type: string
+                example: Integrass-Sports
+              address1:
+                type: string
+                format: 56 odStr 123
+              adress2:
+                type: string
+                example: Block 5
+              zip:
+                type: string
+                example: "32701"
+              stateCode:
+                type: string
+                example: FL
+              city:
+                type: string
+                example: Altimonte spring
+              country:
+                type: string
+                example: USA
+              firstname:
+                type: string
+                example: Emmanuelle
+              lastname:
+                type: string
+                example: Rice
+              email:
+                type: string
+                example: faker35116@email.com
+              alternate_email:
+                type: string
+                example: faker81471@email.com
+              phone:
+                type: string
+                example: 281-896-7301
+              phone_ext:
+                type: string
+              mobile:
+                type: string
+                example: 004-744-2109
+    CompanyRequest:
+      content:
+        application/json:
+          schema:
+            properties:
+              organization_id:
+                type: integer
+                example: 1
+              name:
+                type: string
+                example: Integrass-Sports
+              address_one:
+                type: string
+                format: 56 odStr 123
+              address_two:
+                type: string
+                example: Block 5
+              zip:
+                type: string
+                example: "32701"
+              state:
+                type: string
+                example: FL
+              city:
+                type: string
+                example: Altimonte spring
+              country:
+                type: string
+                example: USA
+              firstname:
+                type: string
+                example: Emmanuelle
+              lastname:
+                type: string
+                example: Rice
+              email:
+                type: string
+                example: faker35116@email.com
+              alternate_email:
+                type: string
+                example: faker81471@email.com
+              phone:
+                type: string
+                example: 281-896-7301
+              phone_ext:
+                type: string
+              mobile:
+                type: string
+                example: 004-744-2109
+    RegistrationRequest:
+      content:
+        application/json:
+          schema:
+            properties:
+              member_type_id:
+                type: integer
+                example: 1
+              email:
+                type: string
+                example: faker35116@email.com
+              retype_email:
+                type: string
+                example: faker35116@email.com
+              address1:
+                type: string
+                format: Ste. 1590
+              address2:
+                type: string
+                format: 956 International Parkway
+              zip:
+                type: string
+                example: "32701"
+              state_code:
+                type: string
+                example: FL
+              city:
+                type: string
+                example: Altimonte spring
+              country:
+                type: string
+                example: USA
+              phone_1:
+                type: string
+                example: 281-896-7301
+              phone_2:
+                type: string
+                example: 004-744-2109
+              diversity_id:
+                type: integer
+                example: 1
+              donation_amount:
+                type: integer
+                example: 10
+              discount_amount:
+                type: integer
+                example: 5
+              members:
+                type: object
+                example:
+                - first_name: Emmanuelle
+                  middle_name: Rice
+                  last_name: Rice
+                  gender: m
+                  dob: 02/05/1989
+                  relation: "0"
+                  citizenship: "1"
+                - first_name: Frederique
+                  middle_name: R
+                  last_name: Schmidt
+                  gender: f
+                  dob: 02/25/2000
+                  relation: "1"
+                  citizenship: "1"
+    RegistrationUpdateRequest:
+      content:
+        application/json:
+          schema:
+            properties:
+              member_type_id:
+                type: integer
+                example: 1
+              email:
+                type: string
+                example: faker35116@email.com
+              retype_email:
+                type: string
+                example: faker35116@email.com
+              address1:
+                type: string
+                format: Ste. 1590
+              address2:
+                type: string
+                format: 956 International Parkway
+              zip:
+                type: string
+                example: "32701"
+              state_code:
+                type: string
+                example: FL
+              city:
+                type: string
+                example: Altimonte spring
+              country:
+                type: string
+                example: USA
+              phone_1:
+                type: string
+                example: 281-896-7301
+              phone_2:
+                type: string
+                example: 004-744-2109
+              diversity_id:
+                type: integer
+                example: 1
+              members:
+                type: object
+                example:
+                - reg_member_id: 3
+                  first_name: Emmanuelle
+                  middle_name: Rice
+                  last_name: Rice
+                  gender: m
+                  dob: 02/05/1989
+                  relation: "0"
+                  citizenship: "1"
+                - reg_member_id: 4
+                  first_name: Frederique
+                  middle_name: R
+                  last_name: Schmidt
+                  gender: f
+                  dob: 02/25/2000
+                  relation: "1"
+                  citizenship: "1"
+    WaiversRequest:
+      content:
+        application/json:
+          schema:
+            properties:
+              registration_id:
+                type: integer
+                example: 3
+              waivers_id:
+                type: integer
+                example: 1
+              initials:
+                type: string
+                example: RR
+    CheckoutRequest:
+      content:
+        application/json:
+          schema:
+            properties:
+              cardNumber:
+                type: integer
+                example: 4111111111111111
+              expiration-year:
+                type: integer
+                example: 2028
+              expiration-month:
+                type: integer
+                example: 12
+              cvv:
+                type: integer
+                example: 123
+              amount:
+                type: integer
+                example: 100
+              owner:
+                type: string
+                example: Integrass
+              registration_id:
+                type: integer
+                example: 1
+              billing_firstname:
+                type: string
+                format: Parker
+              billing_lastname:
+                type: string
+                format: Peter
+              billing_company:
+                type: string
+                format: integrass
+              billing_addressline1:
+                type: string
+                format: 956 International Parkway
+              billing_zip:
+                type: string
+                example: "32701"
+              billing_state:
+                type: string
+                example: FL
+              billing_city:
+                type: string
+                example: Altimonte spring
+              billing_country:
+                type: string
+                example: USA
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      description: clients authentication token
+      flows:
+        implicit:
+          authorizationUrl: token
+          scopes:
+            read: get token
+            update: refresh token
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
