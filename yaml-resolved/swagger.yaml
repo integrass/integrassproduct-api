@@ -472,23 +472,23 @@ paths:
     post:
       tags:
       - Registration
-      summary: 'Registration form - Step 1 : Personal Information & Donation'
+      summary: 'Registration form - Step 1 : Club Registration'
       operationId: createClubRegistration
       requestBody:
-        $ref: '#/components/requestBodies/RegistrationRequest'
+        $ref: '#/components/requestBodies/ClubRegistrationRequest'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VerifyRegInfoResponse'
+                $ref: '#/components/schemas/ClubRegInfoResponse'
         "422":
           description: The given data was invalid.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RegistrationMemberErrorResponse'
+                $ref: '#/components/schemas/ClubRegistrationErrorResponse'
       deprecated: true
   /api/my_company:
     get:
@@ -1779,6 +1779,30 @@ components:
         data:
           type: object
           example: []
+    ClubRegInfoResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Step 1 completed!
+        data:
+          type: object
+          example: []
+    ClubRegistrationErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: The given data was invalid.
+        data:
+          type: object
+          example: []
     inline_response_403:
       properties:
         message:
@@ -2192,6 +2216,78 @@ components:
               billing_country:
                 type: string
                 example: USA
+    ClubRegistrationRequest:
+      content:
+        application/json:
+          schema:
+            properties:
+              member_type_id:
+                type: integer
+                example: 21
+              club_name:
+                type: string
+                example: Wellington Water Ski Club
+              club_type:
+                type: string
+                example: 3-event-AWS
+              web:
+                type: string
+                example: schmeler.com
+              school:
+                type: string
+                example: Schuppe-Buckridge
+              address1:
+                type: string
+                example: 337 Cristian Turnpike Apt. 262
+              city:
+                type: string
+                example: South Alvis
+              state:
+                type: string
+                example: PA
+              country:
+                type: string
+                example: USA
+              zip:
+                type: string
+                example: "75917"
+              members:
+                type: object
+                example:
+                - first_name: Felix
+                  last_name: Gorczany
+                  member_id: 27544WISOK
+                  address1: 11509 Roscoe Ridges Suite 249
+                  city: Port Douglas
+                  state: TX
+                  country: USA
+                  zip: "93032"
+                  phone1: +1-713-230-8438
+                  phone2: ""
+                  email: gennaro36@example.net
+                  type: "0"
+                - first_name: Foster
+                  last_name: Flatley
+                  member_id: 47986SHIEL
+                  phone1: +1 (501) 361-7219
+                  phone2: ""
+                  type: "1"
+                - first_name: Trenton
+                  last_name: Witting
+                  member_id: 80925HIRTH
+                  type: "2"
+                - first_name: Fabiola
+                  last_name: Swaniawski
+                  member_id: 72747LEDNE
+                  type: "3"
+                - first_name: Mary
+                  last_name: Hickle
+                  member_id: 43061MARQU
+                  type: "4"
+                - first_name: Allie
+                  last_name: Feest
+                  member_id: 19888JAST
+                  type: "5"
   securitySchemes:
     OAuth2:
       type: oauth2
