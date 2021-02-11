@@ -1790,19 +1790,98 @@ components:
           example: Step 1 completed!
         data:
           type: object
-          example: []
+          example:
+            id: 437
+            member_type_id: "3"
+            club_name: Hermann-Reilly
+            club_type: ward.karley
+            club_type_id: 1
+            web: wilkinson.biz
+            school: Howell PLC
+            address1: |-
+              49370 Therese Turnpike Suite 586
+              Lake Kimberlyport, WI 15989
+            city: Margueritestad
+            state: Texas
+            country: Fiji
+            zip: 25835-4413
+            primarry_contact:
+              id: 100
+              first_name: Kade
+              last_name: Bradtke
+              member_id: 32385KOHLE
+              address1: |-
+                6936 Feil Mountain Apt. 530
+                Everardotown, MI 57519-6814
+              city: New Sydneeland
+              state: Illinois
+              country: Cook Islands
+              zip: 90134-5769
+              phone1: +1.921.890.4516
+              phone2: ""
+              email: cdenesik@example.org
+            secondary_contact:
+              id: 258
+              first_name: Grady
+              last_name: Wolff
+              member_id: 30718KERLU
+              phone1: 1-834-722-6688
+              phone2: ""
+            president_info:
+              id: 191
+              first_name: Jewel
+              last_name: Cummings
+              member_id: 66132KLING
+            vp_info:
+              id: 905
+              first_name: Carli
+              last_name: Reinger
+              member_id: 54138ABSHI
+            secretary_info:
+              id: 502
+              first_name: Berry
+              last_name: Ullrich
+              member_id: 13239FRITS
+            treasurer_info:
+              id: 814
+              first_name: Audrey
+              last_name: Bauch
+              member_id: 10323VONRU
     ClubRegistrationErrorResponse:
       type: object
       properties:
-        status:
-          type: string
-          example: error
         message:
           type: string
           example: The given data was invalid.
-        data:
+        errors:
           type: object
-          example: []
+          example:
+            member_type_id:
+            - Membership type is required
+            club_name:
+            - Club name is required
+            city:
+            - Club city is required
+            state:
+            - Club state is required
+            zip:
+            - Club zip is required
+            members.0.first_name:
+            - Primary contact first name is required
+            members.0.last_name:
+            - Primary contact last name is required
+            members.0.city:
+            - Primary contact city is required
+            members.0.state:
+            - Primary contact state is required
+            members.0.zip:
+            - Primary contact zip is required
+            members.0.phone1:
+            - Primary contact phone is required
+            members.0.email:
+            - Primary contact email is required
+            members.0.type:
+            - Primary contact type is required
     inline_response_403:
       properties:
         message:
