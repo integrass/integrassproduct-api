@@ -468,28 +468,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RegistrationMemberErrorResponse'
-  /api/club_registration:
-    post:
-      tags:
-      - Registration
-      summary: 'Registration form - Step 1 : Club Registration'
-      operationId: createClubRegistration
-      requestBody:
-        $ref: '#/components/requestBodies/ClubRegistrationRequest'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ClubRegInfoResponse'
-        "422":
-          description: The given data was invalid.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ClubRegistrationErrorResponse'
-      deprecated: true
   /api/my_company:
     get:
       tags:
@@ -737,12 +715,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VerifyRegInfoResponse'
-        "422":
-          description: The given data was invalid.
+        "404":
+          description: The data not found.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RegistrationMemberErrorResponse'
+                $ref: '#/components/schemas/VerifyRegInfoError'
     put:
       tags:
       - Registration
@@ -772,6 +750,56 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RegistrationMemberErrorResponse'
+  /api/club_registration:
+    post:
+      tags:
+      - Registration
+      summary: 'Registration form - Step 1 : Club Registration'
+      operationId: createClubRegistration
+      requestBody:
+        $ref: '#/components/requestBodies/ClubRegistrationRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubRegInfoResponse'
+        "422":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubRegistrationErrorResponse'
+  /api/club_registration/{regId}:
+    get:
+      tags:
+      - Registration
+      summary: 'Registration form - Step 2 : Get Club registration Information for
+        verify'
+      operationId: VerifyClubRegInfo
+      parameters:
+      - name: regId
+        in: path
+        description: Registration Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubRegInfoVerifyResponse'
+        "404":
+          description: The data not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyRegInfoError'
   /api/waivers/{regId}:
     get:
       tags:
@@ -1664,6 +1692,18 @@ components:
               relationship: child
               created_at: 2021-02-03T12:01:37.000000Z
               updated_at: 2021-02-03T12:01:37.000000Z
+    VerifyRegInfoError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Registration not exist
+        data:
+          type: object
+          example: []
     GetWaiversInfoResponse:
       type: object
       properties:
@@ -1792,61 +1832,137 @@ components:
           type: object
           example:
             id: 437
+            registration_id: 31
             member_type_id: "3"
-            club_name: Hermann-Reilly
-            club_type: ward.karley
-            club_type_id: 1
-            web: wilkinson.biz
-            school: Howell PLC
-            address1: |-
-              49370 Therese Turnpike Suite 586
-              Lake Kimberlyport, WI 15989
-            city: Margueritestad
-            state: Texas
-            country: Fiji
+            club_name: Wellington Water Ski Club
+            club_type: 3-event-AWS
+            club_type_id: 3
+            web: schmeler.com
+            school: Schuppe-Buckridge
+            address1: 337 Cristian Turnpike Apt. 262
+            city: South Alvis
+            state: PA
+            country: USA
             zip: 25835-4413
             primarry_contact:
               id: 100
-              first_name: Kade
-              last_name: Bradtke
-              member_id: 32385KOHLE
-              address1: |-
-                6936 Feil Mountain Apt. 530
-                Everardotown, MI 57519-6814
-              city: New Sydneeland
-              state: Illinois
-              country: Cook Islands
-              zip: 90134-5769
-              phone1: +1.921.890.4516
+              team_id: 437
+              first_name: Felix
+              last_name: Gorczany
+              membership_id: 27544WISOK
+              address1: 11509 Roscoe Ridges Suite 249
+              city: Port Douglas
+              state: TX
+              country: USA
+              zip: "93032"
+              phone1: +1-713-230-8438
               phone2: ""
-              email: cdenesik@example.org
+              email: gennaro36@example.net
             secondary_contact:
-              id: 258
+              id: 101
+              team_id: 437
               first_name: Grady
               last_name: Wolff
-              member_id: 30718KERLU
+              membership_id: 30718KERLU
               phone1: 1-834-722-6688
               phone2: ""
+              email: gennaro36@example.net
             president_info:
-              id: 191
+              id: 102
+              team_id: 437
               first_name: Jewel
               last_name: Cummings
-              member_id: 66132KLING
+              membership_id: 66132KLING
             vp_info:
-              id: 905
+              id: 103
+              team_id: 437
               first_name: Carli
               last_name: Reinger
-              member_id: 54138ABSHI
+              membership_id: 54138ABSHI
             secretary_info:
-              id: 502
+              id: 104
+              team_id: 437
               first_name: Berry
               last_name: Ullrich
-              member_id: 13239FRITS
+              membership_id: 13239FRITS
             treasurer_info:
-              id: 814
+              id: 105
+              team_id: 437
               first_name: Audrey
               last_name: Bauch
-              member_id: 10323VONRU
+              membership_id: 10323VONRU
+    ClubRegInfoVerifyResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        message:
+          type: string
+          example: Club registration ingformation for verification
+        data:
+          type: object
+          example:
+            id: 437
+            registration_id: 31
+            member_type_id: "3"
+            club_name: Wellington Water Ski Club
+            club_type: 3-event-AWS
+            club_type_id: 3
+            web: schmeler.com
+            school: Schuppe-Buckridge
+            address1: 337 Cristian Turnpike Apt. 262
+            city: South Alvis
+            state: PA
+            country: USA
+            zip: 25835-4413
+            primarry_contact:
+              id: 100
+              team_id: 437
+              first_name: Felix
+              last_name: Gorczany
+              membership_id: 27544WISOK
+              address1: 11509 Roscoe Ridges Suite 249
+              city: Port Douglas
+              state: TX
+              country: USA
+              zip: "93032"
+              phone1: +1-713-230-8438
+              phone2: ""
+              email: gennaro36@example.net
+            secondary_contact:
+              id: 101
+              team_id: 437
+              first_name: Grady
+              last_name: Wolff
+              membership_id: 30718KERLU
+              phone1: 1-834-722-6688
+              phone2: ""
+              email: gennaro36@example.net
+            president_info:
+              id: 102
+              team_id: 437
+              first_name: Jewel
+              last_name: Cummings
+              membership_id: 66132KLING
+            vp_info:
+              id: 103
+              team_id: 437
+              first_name: Carli
+              last_name: Reinger
+              membership_id: 54138ABSHI
+            secretary_info:
+              id: 104
+              team_id: 437
+              first_name: Berry
+              last_name: Ullrich
+              membership_id: 13239FRITS
+            treasurer_info:
+              id: 105
+              team_id: 437
+              first_name: Audrey
+              last_name: Bauch
+              membership_id: 10323VONRU
     ClubRegistrationErrorResponse:
       type: object
       properties:
@@ -1880,7 +1996,7 @@ components:
             - Primary contact phone is required
             members.0.email:
             - Primary contact email is required
-            members.0.type:
+            members.0.contact_type:
             - Primary contact type is required
     inline_response_403:
       properties:
@@ -2335,7 +2451,7 @@ components:
                 example:
                 - first_name: Felix
                   last_name: Gorczany
-                  member_id: 27544WISOK
+                  membership_id: 27544WISOK
                   address1: 11509 Roscoe Ridges Suite 249
                   city: Port Douglas
                   state: TX
@@ -2344,29 +2460,29 @@ components:
                   phone1: +1-713-230-8438
                   phone2: ""
                   email: gennaro36@example.net
-                  type: "0"
+                  contact_type: "0"
                 - first_name: Foster
                   last_name: Flatley
-                  member_id: 47986SHIEL
+                  membership_id: 47986SHIEL
                   phone1: +1 (501) 361-7219
                   phone2: ""
-                  type: "1"
+                  contact_type: "1"
                 - first_name: Trenton
                   last_name: Witting
-                  member_id: 80925HIRTH
-                  type: "2"
+                  membership_id: 80925HIRTH
+                  contact_type: "2"
                 - first_name: Fabiola
                   last_name: Swaniawski
-                  member_id: 72747LEDNE
-                  type: "3"
+                  membership_id: 72747LEDNE
+                  contact_type: "3"
                 - first_name: Mary
                   last_name: Hickle
-                  member_id: 43061MARQU
-                  type: "4"
+                  membership_id: 43061MARQU
+                  contact_type: "4"
                 - first_name: Allie
                   last_name: Feest
-                  member_id: 19888JAST
-                  type: "5"
+                  membership_id: 19888JAST
+                  contact_type: "5"
   securitySchemes:
     OAuth2:
       type: oauth2
