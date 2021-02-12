@@ -2303,10 +2303,10 @@ components:
               member_type_id:
                 type: integer
                 example: 21
-              club_name:
+              name:
                 type: string
                 example: Wellington Water Ski Club
-              club_type:
+              type:
                 type: string
                 example: 3-event-AWS
               web:
