@@ -2411,6 +2411,9 @@ components:
               billing_country:
                 type: string
                 example: USA
+              billing_phone1:
+                type: string
+                example: "9876543210"
     ClubRegistrationRequest:
       content:
         application/json:
