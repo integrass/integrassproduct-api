@@ -828,7 +828,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetWaiversInfoError'
-      deprecated: true
     post:
       tags:
       - Registration
@@ -858,7 +857,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WaiversError'
-      deprecated: true
   /api/coupon/{code}:
     get:
       tags:
@@ -1336,40 +1334,6 @@ components:
             city: Altimonte spring
             country: USA
             contact: []
-    RegistrationMemberInfoResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: success
-        message:
-          type: string
-          example: Step 1 completed!
-        data:
-          type: object
-          example:
-            id: 101
-            membership_type: "1"
-            address_1: |-
-              Ste. 1590
-              956 International
-              Parkway
-            address_2: ""
-            zip: 32746
-            state_code: FL
-            city: Lake Mary
-            country: USA
-            email: mohamedali@integrass.com
-            phone_1: "885258247"
-            phone_2: "885258247"
-            members:
-              first_name: Shahul
-              middle_name: Mohamedali
-              last_name: Jinna
-              gender: m
-              dob: 05/02/1989
-              relationship: ""
-              citizenship: ""
     RegistrationMemberErrorResponse:
       type: object
       properties:
@@ -1667,6 +1631,11 @@ components:
             country: Norway
             phone_1: 1-603-256-4345 x44348
             email: lina07@yahoo.com
+            custom_fields:
+              sports_discipline_1: Adaptive
+              sports_discipline_2: Wake Surf
+              federation: Event (AWSA) Under 21 Team Donation Fund
+              password: sR7VSS83#%
             members:
             - id: 5
               member_id: 4
@@ -2270,6 +2239,13 @@ components:
               discount_amount:
                 type: integer
                 example: 5
+              custom_fields:
+                type: object
+                example:
+                  sports_discipline_1: Adaptive
+                  sports_discipline_2: Wake Surf
+                  federation: Event (AWSA) Under 21 Team Donation Fund
+                  password: sR7VSS83#%
               members:
                 type: object
                 example:
@@ -2328,6 +2304,13 @@ components:
               diversity_id:
                 type: integer
                 example: 1
+              custom_fields:
+                type: object
+                example:
+                  sports_discipline_1: Adaptive
+                  sports_discipline_2: Wake Surf
+                  federation: Event (AWSA) Under 21 Team Donation Fund
+                  password: sR7VSS83#%
               members:
                 type: object
                 example:
