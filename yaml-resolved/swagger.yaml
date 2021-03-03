@@ -21,14 +21,16 @@ tags:
   description: Client/3rd party Authentication
 - name: UserAuth
   description: User authentications
+- name: SAAS User Profile
+  description: Admin people can access this Subscription Informations
 - name: Registration
   description: Member registration Forms
-- name: Profile
-  description: A user's way to aquire a Membership (individual or family).
 - name: Organization
   description: Information about Organization
 - name: OrganizationCompany
   description: Company information within the Organization
+- name: Member Profile
+  description: A user's way to aquire a Membership (individual or family).
 paths:
   /api/token:
     post:
@@ -162,8 +164,8 @@ paths:
   /api/my_profile:
     post:
       tags:
-      - Profile
-      summary: Get current user profile informations
+      - SAAS User Profile
+      summary: Get current SAAS user profile informations
       operationId: getUserProfile
       parameters: []
       responses:
@@ -182,16 +184,16 @@ paths:
       security:
       - bearerAuth:
         - Bearer token
-  /api/profile/{profileId}:
+  /api/member/profile/{profileId}:
     get:
       tags:
-      - Profile
+      - Member Profile
       summary: Get the given User Profile Information
       operationId: GetProfile
       parameters:
       - name: profileId
         in: path
-        description: Users Profile Id
+        description: Members Profile Id
         required: true
         style: simple
         explode: false
@@ -217,7 +219,7 @@ paths:
         - update
     put:
       tags:
-      - Profile
+      - Member Profile
       summary: Update User Profile Information
       operationId: upateProfile
       parameters:
@@ -251,7 +253,7 @@ paths:
         - update
     delete:
       tags:
-      - Profile
+      - Member Profile
       summary: Delete a profile by ID
       operationId: deleteProfile
       parameters:
@@ -1003,22 +1005,34 @@ components:
         id:
           type: integer
           example: 100
-        accountId:
+        member_id:
           type: integer
           nullable: true
-          example: 2345
-        email:
-          type: string
-          example: cameron@integrass.com
-        username:
-          type: string
-          example: Hadley8712
+          example: 25
         firstName:
           type: string
           example: Hadley
         lastName:
           type: string
           example: Ritchie
+        middlenam:
+          type: string
+          example: z
+        address1:
+          type: string
+          example: 491 Crooks Springs
+        address2:
+          type: string
+          example: Suite 596
+        zip:
+          type: string
+          example: "61343"
+        state_code:
+          type: string
+          example: Georgia
+        city:
+          type: string
+          example: Autumnfurt
         dob:
           type: string
           format: m/d/Y
@@ -1027,37 +1041,61 @@ components:
           type: string
           nullable: true
           example: M
-        compId:
-          type: integer
-          nullable: true
-          example: 770892
+        email:
+          type: string
+          example: lonie.hermiston@jacobs.com
         membership:
-          type: array
-          items:
-            type: object
-            nullable: true
-            example:
-              membershipType: Official
-              enrolledOn: 05/15/2020
-              expireIn: 05/14/2021
-              payment: Paypal
-              txnId: PEI34JDX578
+          type: object
+          nullable: true
+          example:
+          - membershipType: Family
+            enrolledOn: 05/15/2020
+            expireIn: 05/14/2021
+            payment: Paypal
+            txnId: PEI34JDX578
         events:
-          type: array
-          items:
-            type: object
-            nullable: true
-            example:
-            - eventId: 123
-              eventName: AOS
-              enrolledOn: 08/23/2020
-              payment: Paypal
-              txnId: ASD456KI98
-            - eventId: 456
-              eventName: ACAH
-              enrolledOn: 06/28/2020
-              payment: Coupons
-              couponCode: KDIHGHSWJG
+          type: object
+          nullable: true
+          example:
+          - eventId: 123
+            eventName: AOS
+            enrolledOn: 08/23/2020
+            payment: Paypal
+            txnId: ASD456KI98
+          - eventId: 456
+            eventName: ACAH
+            enrolledOn: 06/28/2020
+            payment: Coupons
+            couponCode: KDIHGHSWJG
+        courses:
+          type: object
+          nullable: true
+          example:
+          - course_id: 13
+            course_name: Introduction about the Sports
+            enrolledOn: 08/23/2020
+            payment: Paypal
+            txnId: ASD456KI98
+          - course_id: 46
+            course_name: How to play
+            enrolledOn: 06/28/2020
+            payment: Coupons
+            couponCode: KDIHGHSWJG
+        timeline:
+          type: object
+          nullable: true
+          example:
+            "2021-02-21":
+            - Registration Created
+            - Registration Invoice Created
+            "2021-02-22":
+            - Payment Successfull
+            "2021-02-23":
+            - Support Team sent you an Confirmation email
+            "2021-02-24":
+            - Profile activated
+            "2021-02-25":
+            - Renew your registration
     Error:
       type: object
       example:
@@ -1645,6 +1683,7 @@ components:
               gender: m
               dob: 28/03/1975
               citizenship: NI
+              diversity_id: 1
               created_at: 2021-02-03T12:01:37.000000Z
               updated_at: 2021-02-03T12:01:37.000000Z
             families:
@@ -1799,7 +1838,7 @@ components:
         data:
           type: object
           example:
-            id: 437
+            id: 4
             registration_id: 31
             member_type_id: "3"
             club_name: Wellington Water Ski Club
@@ -1859,6 +1898,59 @@ components:
               first_name: Audrey
               last_name: Bauch
               membership_id: 10323VONRU
+            insured_members:
+            - id: 3
+              team_id: 4
+              insurance_type: "1"
+              name: Rafaela Kiehn
+              home_phone: "3995810912"
+              home_phone_country_code: +1
+              home_phone_extension: "321"
+              work_phone: "4414979065"
+              work_phone_country_code: +1
+              work_phone_extension: "456"
+              fax: "6543218979"
+              address1: 735 Stuart Mount
+              address2: Chadrick Crossing
+              city: BATON ROUGE
+              state_code: CO
+              state: COLORADO SPRINGS
+              zip: "80906"
+              country: USA
+              certificate_type: Year
+              sanctioned_type: tournament
+              event_sanction: CO
+              specific_event_title: Water Ski Temp
+              specific_event_date: 2021-02-26
+              team_has_any_agreement: "N"
+              additional_insurance: "Y"
+              additional_insurance_member: sponsor
+            - id: 4
+              team_id: 4
+              insurance_type: "1"
+              name: Lonny Bosco
+              home_phone: "2812623334"
+              home_phone_country_code: +1
+              home_phone_extension: "321"
+              work_phone: "4414979065"
+              work_phone_country_code: +1
+              work_phone_extension: "456"
+              fax: "6543218979"
+              address1: 735 Stuart Mount
+              address2: Chadrick Crossing
+              city: BATON ROUGE
+              state_code: CO
+              state: COLORADO SPRINGS
+              zip: "80906"
+              country: USA
+              certificate_type: Year
+              sanctioned_type: tournament
+              event_sanction: CO
+              specific_event_title: Water Ski Temp
+              specific_event_date: 2021-02-26
+              team_has_any_agreement: "N"
+              additional_insurance: "Y"
+              additional_insurance_member: sponsor
     ClubRegInfoVerifyResponse:
       type: object
       properties:
@@ -1931,6 +2023,59 @@ components:
               first_name: Audrey
               last_name: Bauch
               membership_id: 10323VONRU
+            insured_members:
+            - id: 3
+              team_id: 4
+              insurance_type: "1"
+              name: Rafaela Kiehn
+              home_phone: "3995810912"
+              home_phone_country_code: +1
+              home_phone_extension: "321"
+              work_phone: "4414979065"
+              work_phone_country_code: +1
+              work_phone_extension: "456"
+              fax: "6543218979"
+              address1: 735 Stuart Mount
+              address2: Chadrick Crossing
+              city: BATON ROUGE
+              state_code: CO
+              state: COLORADO SPRINGS
+              zip: "80906"
+              country: USA
+              certificate_type: Year
+              sanctioned_type: tournament
+              event_sanction: CO
+              specific_event_title: Water Ski Temp
+              specific_event_date: 2021-02-26
+              team_has_any_agreement: "N"
+              additional_insurance: "Y"
+              additional_insurance_member: sponsor
+            - id: 4
+              team_id: 4
+              insurance_type: "1"
+              name: Lonny Bosco
+              home_phone: "2812623334"
+              home_phone_country_code: +1
+              home_phone_extension: "321"
+              work_phone: "4414979065"
+              work_phone_country_code: +1
+              work_phone_extension: "456"
+              fax: "6543218979"
+              address1: 735 Stuart Mount
+              address2: Chadrick Crossing
+              city: BATON ROUGE
+              state_code: CO
+              state: COLORADO SPRINGS
+              zip: "80906"
+              country: USA
+              certificate_type: Year
+              sanctioned_type: tournament
+              event_sanction: CO
+              specific_event_title: Water Ski Temp
+              specific_event_date: 2021-02-26
+              team_has_any_agreement: "N"
+              additional_insurance: "Y"
+              additional_insurance_member: sponsor
     ClubRegistrationErrorResponse:
       type: object
       properties:
@@ -2413,13 +2558,13 @@ components:
             properties:
               member_type_id:
                 type: integer
-                example: 21
+                example: 3
               name:
                 type: string
                 example: Wellington Water Ski Club
               type:
                 type: string
-                example: 3-event-AWS
+                example: "3"
               web:
                 type: string
                 example: schmeler.com
@@ -2441,6 +2586,11 @@ components:
               zip:
                 type: string
                 example: "75917"
+              websites:
+                type: array
+                example:
+                - abc.com
+                - www.dfv.com
               members:
                 type: object
                 example:
@@ -2452,8 +2602,9 @@ components:
                   state: TX
                   country: USA
                   zip: "93032"
-                  phone1: +1-713-230-8438
-                  phone2: ""
+                  phone_1: +1-713-230-8438
+                  fax: ""
+                  mobile: ""
                   email: gennaro36@example.net
                   contact_type: "0"
                 - first_name: Foster
@@ -2478,6 +2629,57 @@ components:
                   last_name: Feest
                   membership_id: 19888JAST
                   contact_type: "5"
+              insured_members:
+                type: object
+                example:
+                - insurance_type: "1"
+                  name: Rafaela Kiehn
+                  home_phone: "3995810912"
+                  home_phone_country_code: +1
+                  home_phone_extension: "321"
+                  work_phone: "4414979065"
+                  work_phone_country_code: +1
+                  work_phone_extension: "456"
+                  fax: "6543218979"
+                  address1: 735 Stuart Mount
+                  address2: Chadrick Crossing
+                  city: BATON ROUGE
+                  state_code: CO
+                  state: COLORADO SPRINGS
+                  zip: "80906"
+                  country: USA
+                  certificate_type: Year
+                  sanctioned_type: tournament
+                  event_sanction: CO
+                  specific_event_title: Water Ski Temp
+                  specific_event_date: 2021-02-26
+                  team_has_any_agreement: "N"
+                  additional_insurance: "Y"
+                  additional_insurance_member: sponsor
+                - insurance_type: "1"
+                  name: Lonny Bosco
+                  home_phone: "2812623334"
+                  home_phone_country_code: +1
+                  home_phone_extension: "321"
+                  work_phone: "4414979065"
+                  work_phone_country_code: +1
+                  work_phone_extension: "456"
+                  fax: "6543218979"
+                  address1: 735 Stuart Mount
+                  address2: Chadrick Crossing
+                  city: BATON ROUGE
+                  state_code: CO
+                  state: COLORADO SPRINGS
+                  zip: "80906"
+                  country: USA
+                  certificate_type: Year
+                  sanctioned_type: tournament
+                  event_sanction: CO
+                  specific_event_title: Water Ski Temp
+                  specific_event_date: 2021-02-26
+                  team_has_any_agreement: "N"
+                  additional_insurance: "Y"
+                  additional_insurance_member: sponsor
   securitySchemes:
     OAuth2:
       type: oauth2
