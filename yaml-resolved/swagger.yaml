@@ -802,6 +802,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VerifyRegInfoError'
+    put:
+      tags:
+      - Registration
+      summary: 'Registration form - Step 2 : Update Club Information in verify page'
+      operationId: updateClubRegInfo
+      parameters:
+      - name: regId
+        in: path
+        description: Registration Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/ClubRegistrationUpdateRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubRegInfoVerifyResponse'
+        "404":
+          description: The data not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyRegInfoError'
   /api/waivers/{regId}:
     get:
       tags:
@@ -1866,7 +1895,7 @@ components:
               phone1: +1-713-230-8438
               phone2: ""
               email: gennaro36@example.net
-            secondary_contact:
+            junior_development:
               id: 101
               team_id: 437
               first_name: Grady
@@ -1899,6 +1928,18 @@ components:
               first_name: Audrey
               last_name: Bauch
               membership_id: 10323VONRU
+            ski_directors:
+              id: 106
+              team_id: 437
+              first_name: Kian
+              last_name: Brown
+              membership_id: 10323VONRU
+            assistant_skidirectors:
+              id: 107
+              team_id: 437
+              first_name: Marty
+              last_name: Gislason
+              membership_id: 15863MARTY
             insured_members:
             - id: 3
               team_id: 4
@@ -1991,7 +2032,7 @@ components:
               phone1: +1-713-230-8438
               phone2: ""
               email: gennaro36@example.net
-            secondary_contact:
+            junior_development:
               id: 101
               team_id: 437
               first_name: Grady
@@ -2024,6 +2065,18 @@ components:
               first_name: Audrey
               last_name: Bauch
               membership_id: 10323VONRU
+            ski_directors:
+              id: 106
+              team_id: 437
+              first_name: Kian
+              last_name: Brown
+              membership_id: 10323VONRU
+            assistant_skidirectors:
+              id: 107
+              team_id: 437
+              first_name: Marty
+              last_name: Gislason
+              membership_id: 15863MARTY
             insured_members:
             - id: 3
               team_id: 4
@@ -2628,6 +2681,14 @@ components:
                   last_name: Feest
                   membership_id: 19888JAST
                   contact_type: "5"
+                - first_name: Kian
+                  last_name: Brown
+                  membership_id: 10323VONRU
+                  contact_type: "6"
+                - first_name: Marty
+                  last_name: Gislason
+                  membership_id: 19888JAST
+                  contact_type: "7"
               insured_members:
                 type: object
                 example:
@@ -2656,6 +2717,170 @@ components:
                   additional_insurance: "Y"
                   additional_insurance_member: sponsor
                 - insurance_type: "1"
+                  name: Lonny Bosco
+                  home_phone: "2812623334"
+                  home_phone_country_code: +1
+                  home_phone_extension: "321"
+                  work_phone: "4414979065"
+                  work_phone_country_code: +1
+                  work_phone_extension: "456"
+                  fax: "6543218979"
+                  address1: 735 Stuart Mount
+                  address2: Chadrick Crossing
+                  city: BATON ROUGE
+                  state_code: CO
+                  state: COLORADO SPRINGS
+                  zip: "80906"
+                  country: USA
+                  certificate_type: Year
+                  sanctioned_type: tournament
+                  event_sanction: CO
+                  specific_event_title: Water Ski Temp
+                  specific_event_date: 2021-02-26
+                  team_has_any_agreement: "N"
+                  additional_insurance: "Y"
+                  additional_insurance_member: sponsor
+    ClubRegistrationUpdateRequest:
+      content:
+        application/json:
+          schema:
+            properties:
+              id:
+                type: integer
+                example: 38
+              registration_id:
+                type: integer
+                example: 68
+              member_type_id:
+                type: integer
+                example: 3
+              name:
+                type: string
+                example: Wellington Water Ski Club
+              type:
+                type: string
+                example: "3"
+              web:
+                type: string
+                example: schmeler.com
+              school:
+                type: string
+                example: Schuppe-Buckridge
+              address1:
+                type: string
+                example: 337 Cristian Turnpike Apt. 262
+              city:
+                type: string
+                example: South Alvis
+              state:
+                type: string
+                example: PA
+              country:
+                type: string
+                example: USA
+              zip:
+                type: string
+                example: "75917"
+              websites:
+                type: array
+                example:
+                - website: abc.com
+                - id: 29
+                  website: www.dfv.com
+              members:
+                type: object
+                example:
+                - id: 223
+                  team_id: 38
+                  first_name: Felix
+                  last_name: Gorczany
+                  membership_id: 27544WISOK
+                  address1: 11509 Roscoe Ridges Suite 249
+                  city: Port Douglas
+                  state: TX
+                  country: USA
+                  zip: "93032"
+                  phone_1: +1-713-230-8438
+                  fax: ""
+                  mobile: ""
+                  email: gennaro36@example.net
+                  contact_type: "0"
+                - id: 224
+                  team_id: 38
+                  first_name: Foster
+                  last_name: Flatley
+                  membership_id: 47986SHIEL
+                  phone1: +1 (501) 361-7219
+                  phone2: ""
+                  contact_type: "1"
+                - id: 225
+                  team_id: 38
+                  first_name: Trenton
+                  last_name: Witting
+                  membership_id: 80925HIRTH
+                  contact_type: "2"
+                - id: 226
+                  team_id: 38
+                  first_name: Fabiola
+                  last_name: Swaniawski
+                  membership_id: 72747LEDNE
+                  contact_type: "3"
+                - id: 227
+                  team_id: 38
+                  first_name: Mary
+                  last_name: Hickle
+                  membership_id: 43061MARQU
+                  contact_type: "4"
+                - id: 228
+                  team_id: 38
+                  first_name: Allie
+                  last_name: Feest
+                  membership_id: 19888JAST
+                  contact_type: "5"
+                - id: 229
+                  team_id: 38
+                  first_name: Kian
+                  last_name: Brown
+                  membership_id: 10323VONRU
+                  contact_type: "6"
+                - id: 230
+                  team_id: 38
+                  first_name: Marty
+                  last_name: Gislason
+                  membership_id: 19888JAST
+                  contact_type: "7"
+              insured_members:
+                type: object
+                example:
+                - id: 78
+                  team_id": 38
+                  insurance_type: "1"
+                  name: Rafaela Kiehn
+                  home_phone: "3995810912"
+                  home_phone_country_code: +1
+                  home_phone_extension: "321"
+                  work_phone: "4414979065"
+                  work_phone_country_code: +1
+                  work_phone_extension: "456"
+                  fax: "6543218979"
+                  address1: 735 Stuart Mount
+                  address2: Chadrick Crossing
+                  city: BATON ROUGE
+                  state_code: CO
+                  state: COLORADO SPRINGS
+                  zip: "80906"
+                  country: USA
+                  certificate_type: Year
+                  sanctioned_type: tournament
+                  event_sanction: CO
+                  specific_event_title: Water Ski Temp
+                  specific_event_date: 2021-02-26
+                  team_has_any_agreement: "N"
+                  additional_insurance: "Y"
+                  additional_insurance_member: sponsor
+                - id: 79
+                  team_id": 38
+                  insurance_type: "1"
                   name: Lonny Bosco
                   home_phone: "2812623334"
                   home_phone_country_code: +1
