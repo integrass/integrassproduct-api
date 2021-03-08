@@ -1687,48 +1687,52 @@ components:
         data:
           type: object
           example:
-            id: 4
-            membership_type: individual
+            id: 1
+            membership_type: Individual
             membership_type_id: 1
-            mailing_address1: 837 Bednar Isle Suite 364
-            mailing_address2: Apt. 890
-            zip: 56219-5578
-            state: Utah
-            city: Lake Rhoda
-            country: Norway
-            phone_1: 1-603-256-4345 x44348
-            email: lina07@yahoo.com
+            email: faker35116@email.com
+            address1: string
+            address2: string
+            zip: "32701"
+            state_code: FL
+            city: Altimonte spring
+            country: USA
+            phone_1: 281-896-7301
+            phone_2: 004-744-2109
             disicpline_1: 1
             disicpline_2: 2
-            group_id: 1
-            statement: 1
+            group_id: 2
+            group_name: Group-B
+            statement: 2
             members:
-            - id: 5
-              member_id: 4
-              registration_id: 4
-              first_name: Veronica
-              last_name: Emard
-              middle_name: f
+              id: 1
+              member_id: 1
+              registration_id: 1
+              first_name: Emmanuelle
+              middle_name: Rice
+              last_name: Rice
               gender: m
-              dob: 28/03/1975
-              citizenship: NI
+              dob: 1989-02-05
+              citizenship: "1"
               diversity_id: 1
-              created_at: 2021-02-03T12:01:37.000000Z
-              updated_at: 2021-02-03T12:01:37.000000Z
+              ethnicity: "1"
+              disability: "0"
+              veteran_status: "0"
+              created_at: 2021-03-08T18:51:08.000000Z
+              updated_at: 2021-03-08T18:51:08.000000Z
             families:
-            - id: 3
-              member_id: 4
-              registration_id: 4
-              first_name: Frank
-              last_name: Schuppe
-              middle_name: "n"
+            - id: 1
+              member_id: 1
+              relation: 1
+              first_name: Frederique
+              last_name: Schmidt
+              registration_id: 1
+              created_at: 2021-03-08T18:51:08.000000Z
+              updated_at: 2021-03-08T18:51:08.000000Z
+              dob: 2000-02-25
               gender: f
-              dob: 21/06/1993
-              citizenship: IS
-              relationship: child
-              diversity_id: 1
-              created_at: 2021-02-03T12:01:37.000000Z
-              updated_at: 2021-02-03T12:01:37.000000Z
+              middle_name: R
+              citizenship: "1"
     VerifyRegInfoError:
       type: object
       properties:
