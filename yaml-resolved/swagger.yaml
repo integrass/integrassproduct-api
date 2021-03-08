@@ -2428,6 +2428,18 @@ components:
               phone_2:
                 type: string
                 example: 004-744-2109
+              diversity_id:
+                type: integer
+                example: 1
+              ethnicity:
+                type: integer
+                example: 1
+              disability:
+                type: integer
+                example: 0
+              veteran_status:
+                type: integer
+                example: 0
               donation_amount:
                 type: integer
                 example: 10
@@ -2444,6 +2456,21 @@ components:
                 type: integer
                 example: 2
               statement:
+                type: integer
+                example: 1
+              safe_sport_status:
+                type: integer
+                example: 1
+              safe_sport_user_name:
+                type: string
+                example: Emmanuelle
+              safe_sport_email:
+                type: string
+                example: faker35116@email.com
+              first_choice:
+                type: integer
+                example: 1
+              second_choice:
                 type: integer
                 example: 1
               members:
