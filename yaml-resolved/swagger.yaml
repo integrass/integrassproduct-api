@@ -944,8 +944,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-      deprecated: true
+                $ref: '#/components/schemas/MemberNotExistError'
       security:
       - OAuth2:
         - read
@@ -954,7 +953,7 @@ paths:
       tags:
       - Member Profile
       summary: Update User Profile Information
-      operationId: upateProfile
+      operationId: upateMemberProfile
       parameters:
       - name: profileId
         in: path
@@ -973,13 +972,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProfileInfo'
-        "404":
-          description: Resource not found
+        "422":
+          description: Field validation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-      deprecated: true
+                $ref: '#/components/schemas/UpdateProfileError'
       security:
       - OAuth2:
         - read
@@ -1697,9 +1695,12 @@ components:
         data:
           type: object
           example:
-            registration_id: 3
-            waivers_id: 1
-            initials: RR
+            registration_id: 1
+            waivers:
+            - waivers_id: 1
+              initials: RR
+            - waivers_id: 5
+              initials: RR
     WaiversError:
       type: object
       properties:
@@ -1800,7 +1801,17 @@ components:
         data:
           type: object
           example:
-            waivers_id: 6
+          - waivers_id: 1
+            waivers_title: Individual Waiver
+            waivers_content: Veritatis non sequi a quo. Explicabo debitis rerum repellendus
+              ab vitae error. Reiciendis voluptates quia ea. Non consectetur rerum
+              deleniti itaque nulla et. Ut dolorem dolor perferendis voluptas. Voluptates
+              sint qui eaque odit dolor. Qui dolores maiores explicabo sed. Aliquid
+              animi dolor sed in asperiores qui. Aliquid et ipsa eum velit nihil earum
+              consequatur. Veniam nulla qui aut. Iusto rerum delectus ex harum voluptatem
+              non. Aut quam odit et et eius quia.
+          - waivers_id: 5
+            waivers_title: Safesport waiver
             waivers_content: Veritatis non sequi a quo. Explicabo debitis rerum repellendus
               ab vitae error. Reiciendis voluptates quia ea. Non consectetur rerum
               deleniti itaque nulla et. Ut dolorem dolor perferendis voluptas. Voluptates
@@ -2040,6 +2051,17 @@ components:
               team_has_any_agreement: "N"
               additional_insurance: "Y"
               additional_insurance_member: sponsor
+            team_sites:
+            - id: 1
+              team_id: 3
+              school: Hoover Dam
+              address: 661 Gabriella Summit
+              city: LEXINGTON
+              state: Kentucky
+              state_code: KY
+              zip: "40506"
+              created_at: 2021-03-22T16:02:34.000000Z
+              updated_at: 2021-03-22T16:02:34.000000Z
     ClubRegInfoVerifyResponse:
       type: object
       properties:
@@ -2177,6 +2199,17 @@ components:
               team_has_any_agreement: "N"
               additional_insurance: "Y"
               additional_insurance_member: sponsor
+            team_sites:
+            - id: 1
+              team_id: 3
+              school: Hoover Dam
+              address: 661 Gabriella Summit
+              city: LEXINGTON
+              state: Kentucky
+              state_code: KY
+              zip: "40506"
+              created_at: 2021-03-22T16:02:34.000000Z
+              updated_at: 2021-03-22T16:02:34.000000Z
     ClubRegistrationErrorResponse:
       type: object
       properties:
@@ -2286,6 +2319,49 @@ components:
               second_choice: 1
               created_at: 2021-03-09T19:08:09.000000Z
               updated_at: 2021-03-09T19:08:09.000000Z
+    MemberNotExistError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Member Not Exist
+        errors:
+          type: object
+          example: []
+    UpdateProfileError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The given data was invalid.
+        errors:
+          type: object
+          example:
+            first_name:
+            - First name is required
+            last_name:
+            - Last name is required
+            address1:
+            - Address line1 is required
+            zip:
+            - zip is required
+            state_code:
+            - State Code is required
+            city:
+            - City is required
+            email:
+            - Email is required
+            country:
+            - Country is required
+            phone_1:
+            - The phone 1 field is required.
+            dob:
+            - Members Date Of Birth is required
+            gender:
+            - Gender is required
     inline_response_403:
       properties:
         message:
@@ -2395,24 +2471,48 @@ components:
         application/json:
           schema:
             properties:
-              firstName:
+              first_name:
                 type: string
                 example: Robert
-              lastName:
+              last_name:
                 type: string
                 example: Bashirian
+              middle_name:
+                type: string
+                example: Br
               email:
                 type: string
                 format: email
-              password:
+              phone_1:
                 type: string
-                example: '******'
+                example: 570-049-1012
+              phone_2:
+                type: string
+                example: 931-149-0034
               dob:
                 type: string
-                example: 01/28/1988
+                example: 1975-09-15
               gender:
                 type: string
                 example: m
+              address1:
+                type: string
+                example: 14306 Hyatt Fall
+              address2:
+                type: string
+                example: 3rd Flr
+              city:
+                type: string
+                example: LEXINGTON
+              state_code:
+                type: string
+                example: KY
+              country:
+                type: string
+                example: USA
+              zip:
+                type: string
+                example: "40506"
     OrganizationRequest:
       content:
         application/json:
@@ -2692,12 +2792,13 @@ components:
               registration_id:
                 type: integer
                 example: 3
-              waivers_id:
-                type: integer
-                example: 1
-              initials:
-                type: string
-                example: RR
+              waivers:
+                type: object
+                example:
+                - waivers_id: 1
+                  initials: RR
+                - waivers_id: 5
+                  initials: RR
     CheckoutRequest:
       content:
         application/json:
@@ -2888,6 +2989,15 @@ components:
                   team_has_any_agreement: "N"
                   additional_insurance: "Y"
                   additional_insurance_member: sponsor
+              team_sites:
+                type: object
+                example:
+                - school: Hoover Dam
+                  address: 661 Gabriella Summit
+                  city: LEXINGTON
+                  state: Kentucky
+                  state_code: KY
+                  zip: "40506"
     ClubRegistrationUpdateRequest:
       content:
         application/json:
@@ -3052,6 +3162,17 @@ components:
                   team_has_any_agreement: "N"
                   additional_insurance: "Y"
                   additional_insurance_member: sponsor
+              team_sites:
+                type: object
+                example:
+                - id: 1
+                  team_id: 3
+                  school: Hoover Dam
+                  address: 661 Gabriella Summit
+                  city: LEXINGTON
+                  state: Kentucky
+                  state_code: KY
+                  zip: "40506"
   securitySchemes:
     OAuth2:
       type: oauth2
