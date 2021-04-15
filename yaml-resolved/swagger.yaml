@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
   title: Integrass Sports API
-  description: The Open API for Integrass Sports for the Users, and they can manage
-    related to their Memberships, Events and Courses.
+  description: "The Open API for Integrass Sports for the Users, and they can manage\
+    \ related to their Memberships, Events and Courses."
   contact:
     name: Integrass
     email: support@integrass.com
@@ -350,8 +350,39 @@ paths:
     post:
       tags:
       - Registration
-      summary: 'Registration form - Step 1 : Personal Information & Donation'
+      summary: "Registration form - Step 1 : Personal Information & Donation"
       operationId: createRegistration
+      requestBody:
+        $ref: '#/components/requestBodies/RegistrationRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyRegInfoResponse'
+        "422":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationMemberErrorResponse'
+  /api/update/member_reg/{regId}:
+    post:
+      tags:
+      - Registration
+      summary: "Registration form - Step 1 : Update recently created registration\
+        \ when Previous button clicked"
+      operationId: updateOnRecentMemberReg
+      parameters:
+      - name: regId
+        in: path
+        description: Registration Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
       requestBody:
         $ref: '#/components/requestBodies/RegistrationRequest'
       responses:
@@ -596,7 +627,7 @@ paths:
     get:
       tags:
       - Registration
-      summary: 'Registration form - Step 2 : Verify Information'
+      summary: "Registration form - Step 2 : Verify Information"
       operationId: VerifyRegInfo
       parameters:
       - name: regId
@@ -623,7 +654,7 @@ paths:
     put:
       tags:
       - Registration
-      summary: 'Registration form - Step 2 : update Verify Information'
+      summary: "Registration form - Step 2 : update Verify Information"
       operationId: updateVerifyRegInfo
       parameters:
       - name: regId
@@ -653,8 +684,40 @@ paths:
     post:
       tags:
       - Registration
-      summary: 'Registration form - Step 1 : Club Registration'
+      summary: "Registration form - Step 1 : Club Registration"
       operationId: createClubRegistration
+      requestBody:
+        $ref: '#/components/requestBodies/ClubRegistrationRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubRegInfoResponse'
+        "422":
+          description: The given data was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubRegistrationErrorResponse'
+  /api/update/club_reg/{regId}:
+    post:
+      tags:
+      - Registration
+      summary: "Registration form - Step 1 : Update recently created registration\
+        \ when Previous button clicked"
+      operationId: updateClubRecentReg
+      parameters:
+      - name: regId
+        in: path
+        description: Registration Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+        example: 12
       requestBody:
         $ref: '#/components/requestBodies/ClubRegistrationRequest'
       responses:
@@ -674,8 +737,8 @@ paths:
     get:
       tags:
       - Registration
-      summary: 'Registration form - Step 2 : Get Club registration Information for
-        verify'
+      summary: "Registration form - Step 2 : Get Club registration Information for\
+        \ verify"
       operationId: VerifyClubRegInfo
       parameters:
       - name: regId
@@ -702,7 +765,7 @@ paths:
     put:
       tags:
       - Registration
-      summary: 'Registration form - Step 2 : Update Club Information in verify page'
+      summary: "Registration form - Step 2 : Update Club Information in verify page"
       operationId: updateClubRegInfo
       parameters:
       - name: regId
@@ -732,7 +795,7 @@ paths:
     get:
       tags:
       - Registration
-      summary: 'Registration form - Step 3 : Get Waivers Content'
+      summary: "Registration form - Step 3 : Get Waivers Content"
       operationId: GetWaiversInfo
       parameters:
       - name: regId
@@ -759,7 +822,7 @@ paths:
     post:
       tags:
       - Registration
-      summary: 'Registration form - Step 3 : Apply Waivers Information in registration'
+      summary: "Registration form - Step 3 : Apply Waivers Information in registration"
       operationId: AcceptWaivers
       parameters:
       - name: regId
@@ -789,7 +852,7 @@ paths:
     get:
       tags:
       - Registration
-      summary: 'Registration form - Step 4 : Get Coupon code'
+      summary: "Registration form - Step 4 : Get Coupon code"
       operationId: GetCouponCodeInfo
       parameters:
       - name: code
@@ -818,8 +881,8 @@ paths:
     delete:
       tags:
       - Registration
-      summary: 'Registration form - Step 4 : remove members from registration on checkout
-        page'
+      summary: "Registration form - Step 4 : remove members from registration on checkout\
+        \ page"
       operationId: RemoveMemberFromRegistration
       parameters:
       - name: memberId
@@ -848,7 +911,7 @@ paths:
     post:
       tags:
       - Registration
-      summary: 'Registration form - Step 4 : Checkout'
+      summary: "Registration form - Step 4 : Checkout"
       operationId: ReggistrationCheckout
       parameters:
       - name: regId
@@ -1891,7 +1954,7 @@ components:
           example: success
         message:
           type: string
-          example: 'This transaction has been approved., Transaction ID: 60161512748'
+          example: "This transaction has been approved., Transaction ID: 60161512748"
         data:
           type: object
           example:
@@ -1954,11 +2017,19 @@ components:
               phone2: ""
               email: gennaro36@example.net
             junior_development:
-              id: 101
+            - id: 101
               team_id: 437
               first_name: Grady
               last_name: Wolff
               membership_id: 30718KERLU
+              phone1: 1-834-722-6688
+              phone2: ""
+              email: gennaro36@example.net
+            - id: 201
+              team_id: 437
+              first_name: Ernest
+              last_name: MacGyver
+              membership_id: 56959ERNE
               phone1: 1-834-722-6688
               phone2: ""
               email: gennaro36@example.net
@@ -1987,17 +2058,27 @@ components:
               last_name: Bauch
               membership_id: 10323VONRU
             ski_directors:
-              id: 106
-              team_id: 437
+            - id: 19
+              team_id: 1
               first_name: Kian
               last_name: Brown
               membership_id: 10323VONRU
+            - id: 21
+              team_id: 1
+              first_name: MartyRRR
+              last_name: Gislason
+              membership_id: 19888JAST
             assistant_skidirectors:
-              id: 107
-              team_id: 437
+            - id: 20
+              team_id: 1
+              first_name: Kian
+              last_name: Brown
+              membership_id: 10323VONRU
+            - id: 22
+              team_id: 1
               first_name: Marty
               last_name: Gislason
-              membership_id: 15863MARTY
+              membership_id: 19888JAST
             insured_members:
             - id: 3
               team_id: 4
@@ -2102,11 +2183,19 @@ components:
               phone2: ""
               email: gennaro36@example.net
             junior_development:
-              id: 101
+            - id: 101
               team_id: 437
               first_name: Grady
               last_name: Wolff
               membership_id: 30718KERLU
+              phone1: 1-834-722-6688
+              phone2: ""
+              email: gennaro36@example.net
+            - id: 201
+              team_id: 437
+              first_name: Ernest
+              last_name: MacGyver
+              membership_id: 56959ERNE
               phone1: 1-834-722-6688
               phone2: ""
               email: gennaro36@example.net
@@ -2135,17 +2224,27 @@ components:
               last_name: Bauch
               membership_id: 10323VONRU
             ski_directors:
-              id: 106
-              team_id: 437
+            - id: 19
+              team_id: 1
               first_name: Kian
               last_name: Brown
               membership_id: 10323VONRU
+            - id: 21
+              team_id: 1
+              first_name: MartyRRR
+              last_name: Gislason
+              membership_id: 19888JAST
             assistant_skidirectors:
-              id: 107
-              team_id: 437
+            - id: 20
+              team_id: 1
+              first_name: Kian
+              last_name: Brown
+              membership_id: 10323VONRU
+            - id: 22
+              team_id: 1
               first_name: Marty
               last_name: Gislason
-              membership_id: 15863MARTY
+              membership_id: 19888JAST
             insured_members:
             - id: 3
               team_id: 4
@@ -2914,6 +3013,12 @@ components:
                   phone1: +1 (501) 361-7219
                   phone2: ""
                   contact_type: "1"
+                - first_name: Ernest
+                  last_name: MacGyver
+                  membership_id: 56959ERNE
+                  phone1: +1 (501) 361-7219
+                  phone2: ""
+                  contact_type: "1"
                 - first_name: Trenton
                   last_name: Witting
                   membership_id: 80925HIRTH
@@ -2934,6 +3039,14 @@ components:
                   last_name: Brown
                   membership_id: 10323VONRU
                   contact_type: "6"
+                - first_name: Marty
+                  last_name: Gislason
+                  membership_id: 19888JAST
+                  contact_type: "6"
+                - first_name: Kian
+                  last_name: Brown
+                  membership_id: 10323VONRU
+                  contact_type: "7"
                 - first_name: Marty
                   last_name: Gislason
                   membership_id: 19888JAST
@@ -3071,6 +3184,14 @@ components:
                   phone1: +1 (501) 361-7219
                   phone2: ""
                   contact_type: "1"
+                - id: 233
+                  team_id: 38
+                  first_name: Ernest
+                  last_name: MacGyver
+                  membership_id: 56959ERNE
+                  phone1: +1 (501) 361-7219
+                  phone2: ""
+                  contact_type: "1"
                 - id: 225
                   team_id: 38
                   first_name: Trenton
@@ -3106,12 +3227,24 @@ components:
                   first_name: Marty
                   last_name: Gislason
                   membership_id: 19888JAST
+                  contact_type: "6"
+                - id: 231
+                  team_id: 38
+                  first_name: Kian
+                  last_name: Brown
+                  membership_id: 10323VONRU
+                  contact_type: "7"
+                - id: 232
+                  team_id: 38
+                  first_name: Marty
+                  last_name: Gislason
+                  membership_id: 19888JAST
                   contact_type: "7"
               insured_members:
                 type: object
                 example:
                 - id: 78
-                  team_id": 38
+                  team_id: 38
                   insurance_type: "1"
                   name: Rafaela Kiehn
                   home_phone: "3995810912"
@@ -3137,7 +3270,7 @@ components:
                   additional_insurance: "Y"
                   additional_insurance_member: sponsor
                 - id: 79
-                  team_id": 38
+                  team_id: 38
                   insurance_type: "1"
                   name: Lonny Bosco
                   home_phone: "2812623334"
