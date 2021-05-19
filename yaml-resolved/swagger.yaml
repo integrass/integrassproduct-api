@@ -1873,6 +1873,14 @@ components:
               animi dolor sed in asperiores qui. Aliquid et ipsa eum velit nihil earum
               consequatur. Veniam nulla qui aut. Iusto rerum delectus ex harum voluptatem
               non. Aut quam odit et et eius quia.
+            type: Adult
+            user_info:
+              membership_type: Individual Active
+              start_date: 03/15/2021
+              expires_at: 03/15/2022
+              member_name: Leila Stanton
+              member_initials: LS
+              signed_member: Leila Stanton
           - waivers_id: 5
             waivers_title: Safesport waiver
             waivers_content: Veritatis non sequi a quo. Explicabo debitis rerum repellendus
@@ -1882,6 +1890,14 @@ components:
               animi dolor sed in asperiores qui. Aliquid et ipsa eum velit nihil earum
               consequatur. Veniam nulla qui aut. Iusto rerum delectus ex harum voluptatem
               non. Aut quam odit et et eius quia.
+            type: Adult
+            user_info:
+              membership_type: Individual Active
+              start_date: 03/15/2021
+              expires_at: 03/15/2022
+              member_name: Leila Stanton
+              member_initials: LS
+              signed_member: Leila Stanton
     GetWaiversInfoError:
       type: object
       properties:
@@ -2896,8 +2912,20 @@ components:
                 example:
                 - waivers_id: 1
                   initials: RR
+                  signed_for: Leila Stanton
+                  signed_user: Leila Stanton
+                  first_name: Leila
+                  last_name: Stanton
+                  position: president
+                  email: clubpresident@integrass.com
                 - waivers_id: 5
                   initials: RR
+                  signed_for: Leila Stanton
+                  signed_user: Leila Stanton
+                  first_name: ""
+                  last_name: ""
+                  position: ""
+                  email: ""
     CheckoutRequest:
       content:
         application/json:
